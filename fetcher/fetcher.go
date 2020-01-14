@@ -1,4 +1,4 @@
-package main
+package fetcher
 
 import (
 	"bufio"
@@ -6,7 +6,6 @@ import (
 	"golang.org/x/net/html/charset"
 	"golang.org/x/text/encoding"
 	"golang.org/x/text/encoding/unicode"
-	"golang.org/x/text/transform"
 	"io/ioutil"
 	"log"
 	"net/http"
@@ -20,14 +19,12 @@ func Fetch(url string) ([]byte, error) {
 	defer resp.Body.Close()
 
 	if resp.StatusCode != http.StatusOK {
-		return nil,
-			fmt.Errorf("wrong status code: %d",
-				resp.StatusCode)
+		return nil, fmt.Errorf("wrong status code: %d", resp.StatusCode)
 	}
-	bodyReader := bufio.NewReader(resp.Body)
-	e := determineEncoding(bodyReader)
-	utf8Reader := transform.NewReader(bodyReader,
-		e.NewDecoder())
+	//bodyReader := bufio.NewReader(resp.Body)
+	//e := determineEncoding(bodyReader)
+	//utf8Reader := transform.NewReader(bodyReader, e.NewDecoder())
+	utf8Reader, err := charset.NewReader(resp.Body, resp.Header.Get("Content-Type"))
 	return ioutil.ReadAll(utf8Reader)
 }
 
@@ -37,7 +34,6 @@ func determineEncoding(r *bufio.Reader) encoding.Encoding {
 		log.Printf("Fetcher error: %v", err)
 		return unicode.UTF8
 	}
-	e, _, _ := charset.DetermineEncoding(
-		bytes, "")
+	e, _, _ := charset.DetermineEncoding(bytes, "")
 	return e
 }
