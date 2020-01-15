@@ -22,7 +22,7 @@ var manufacturerRe = regexp.MustCompile(`<td id="bname_\d+" class="bg4">[\s]*<a 
 var classRe = regexp.MustCompile(`<td id="type_name_\d+" class="bg4">[\s]*<a target="_blank" href="/car/.*">(.*)</a>[\s]*</td>`)
 
 // 发动机
-var engineRe = regexp.MustCompile(`<td id="m_motortype_\d+" class="bg4">[\s]*(.*)[\s]*</td>`)
+var engineRe = regexp.MustCompile(`<br/>[\s]*\((.*)\)[\s]*</td>`)
 
 // 动力类型
 var powerType = regexp.MustCompile(`<td id="m_dynamic_\d+" class="bg4">[\s]*(.*)[\s]*</td>`)
@@ -58,6 +58,7 @@ func ParseCarDetail(contents []byte) engine.ParseResult {
 		Price:        extractFloat(contents, priceRe),
 		Manufacturer: extractString(contents, manufacturerRe),
 		Class:        extractString(contents, classRe),
+		Engine:       extractString(contents, engineRe),
 		PowerType:    extractString(contents, powerType),
 		Transmission: extractString(contents, transmission),
 		Length:       extractInt(contents, length),

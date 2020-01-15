@@ -5,7 +5,6 @@ import (
 	"crawler/parse/xcar"
 	"fmt"
 	"regexp"
-	"strings"
 )
 
 const host = "http://newcar.xcar.com.cn"
@@ -22,9 +21,9 @@ func main() {
 
 func printCarModelList(contents []byte) {
 	// 级别
-	var nameRe = regexp.MustCompile(`<td id="m_dynamic_\d+" class="bg4">[\s]*(.*)[\s]*</td>`)
+	var nameRe = regexp.MustCompile(`<br/>[\s]*\((.*)\)[\s]*</td>`)
 	matches := nameRe.FindAllSubmatch(contents, -1)
 	for _, m := range matches {
-		fmt.Printf("%s%v\n", string(m[1]), strings.Fields(string(m[1]))[0])
+		fmt.Printf("%s", string(m[1]))
 	}
 }
