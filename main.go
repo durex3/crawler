@@ -3,6 +3,7 @@ package main
 import (
 	"crawler/engine"
 	"crawler/parse/xcar"
+	"crawler/scheduler"
 	"fmt"
 	"regexp"
 )
@@ -10,7 +11,11 @@ import (
 const host = "http://newcar.xcar.com.cn"
 
 func main() {
-	engine.Run(engine.Request{
+	e := &engine.ConcurrentEngine{
+		Scheduler:   &scheduler.SimpleScheduler{},
+		WorkerCount: 100,
+	}
+	e.Run(engine.Request{
 		Url:        host + "/car/0-0-0-0-0-0-0-0-0-0-0-1",
 		ParserFunc: xcar.ParseCarList,
 	})

@@ -78,7 +78,11 @@ func ParseCarDetail(contents []byte) engine.ParseResult {
 func extractString(contents []byte, re *regexp.Regexp) string {
 	match := re.FindSubmatch(contents)
 	if len(match) >= 2 {
-		return strings.Fields(string(match[1]))[0]
+		s := strings.Fields(string(match[1]))
+		if len(s) > 0 {
+			return s[0]
+		}
+		return ""
 	} else {
 		return ""
 	}
